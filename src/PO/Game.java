@@ -21,6 +21,8 @@ public class Game {
     private int clubTwoGoal;
 
     public Game(String gameName, GameType gameType, Club club1, Club club2, boolean homeAdvantage, boolean penalty){
+        //理论上这些信息在初始化时已经定好，不可能再修改
+
         this.gameName=gameName;
         this.gameType=gameType;
         this.club1=club1;
@@ -58,6 +60,9 @@ public class Game {
 
 
         //start
+
+        clubOneGoal=0;
+        clubTwoGoal=0;
         getClubOneGoal(clubOnePlayerList.get(0),clubTwoDefender,clubTwoKeeper);
         getClubOneGoal(clubOnePlayerList.get(1),clubTwoDefender,clubTwoKeeper);
         getClubOneGoal(clubOnePlayerList.get(2),clubTwoDefender,clubTwoKeeper);
@@ -68,11 +73,16 @@ public class Game {
         getClubTwoGoal(clubTwoPlayerList.get(1),clubOneDefender,clubOneKeeper);
         getClubTwoGoal(clubTwoPlayerList.get(2),clubOneDefender,clubOneKeeper);
 
-        System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
-        if(clubOneGoal==clubTwoGoal&&penalty){
-            penalty(clubOneKeeper,clubTwoKeeper);
-        }
 
+
+
+        if(clubOneGoal==clubTwoGoal&&penalty){
+            System.out.println("******************************************************************************");
+            penalty(clubOneKeeper,clubTwoKeeper);
+        }else{
+            System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
+        }
+        System.out.println(gameType.toString()+"——"+gameName+"全场比赛结束");
 
         }
 
@@ -190,6 +200,7 @@ public class Game {
             }
 
             if ((penalty1 - penalty2) > (5 - i) || (penalty2 - penalty1) > (4 - i)) {
+                System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
                 System.out.println("（点球） " + club1.getName() + " " + penalty1 + " ： " + penalty2 + " " + club2.getName() + " （点球）");
                 return;
             }
@@ -202,6 +213,7 @@ public class Game {
             }
 
             if ((penalty1 - penalty2) > (4 - i) || (penalty2 - penalty1) > (4 - i)) {
+                System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
                 System.out.println("（点球） " + club1.getName() + " " + penalty1 + " ： " + penalty2 + " " + club2.getName() + " （点球）");
                 return;
             }
@@ -223,7 +235,7 @@ public class Game {
 
                 index=(index+1)%3;
             }
-
+            System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
             System.out.println("（点球） "+club1.getName()+" "+penalty1+" ： "+penalty2+" "+club2.getName()+" （点球）");
             return;
 
