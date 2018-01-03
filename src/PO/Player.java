@@ -26,6 +26,9 @@ public class Player {
 
     }
 
+    public String getClub(){
+        return club;
+    }
 
     public String getName(){
         return name;

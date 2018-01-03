@@ -8,6 +8,12 @@ public class Game {
 
     private GameType gameType;
 
+    private int season;         //第几赛季
+
+    private int time;           //第几届赛事
+
+    private int turn;           //第几轮（比赛日）
+
     private Club club1;
 
     private Club club2;
@@ -20,25 +26,36 @@ public class Game {
 
     private int clubTwoGoal;
 
-    public Game(String gameName, GameType gameType, Club club1, Club club2, boolean homeAdvantage, boolean penalty){
+    private GameResult gameResult;
+
+    ArrayList<Player> clubOnePlayerList;
+
+    ArrayList<Player> clubTwoPlayerList;
+
+    public Game(String gameName, GameType gameType, int season, int time, int turn, Club club1, Club club2, boolean homeAdvantage, boolean penalty){
         //理论上这些信息在初始化时已经定好，不可能再修改
 
         this.gameName=gameName;
         this.gameType=gameType;
+        this.season=season;
+        this.time=time;
+        this.turn=turn;
         this.club1=club1;
         this.club2=club2;
         this.homeAdvantage=homeAdvantage;
         this.penalty=penalty;
         clubOneGoal=0;
         clubTwoGoal=0;
+
+        gameResult=new GameResult(gameName, gameType, season, time, turn, club1, club2, homeAdvantage, penalty);
     }
 
-    public void startGame(){
+    public GameResult startGame(){
 
 
         //club1
 
-        ArrayList<Player> clubOnePlayerList=club1.getPlayerList();
+        clubOnePlayerList=club1.getPlayerList();
 
        double clubOneDefender=clubOnePlayerList.get(2).getDefenderAbility()+clubOnePlayerList.get(3).getDefenderAbility()+clubOnePlayerList.get(4).getDefenderAbility();
 
@@ -52,7 +69,7 @@ public class Game {
 
         //club2
 
-        ArrayList<Player> clubTwoPlayerList=club2.getPlayerList();
+        clubTwoPlayerList=club2.getPlayerList();
 
         double clubTwoDefender=clubTwoPlayerList.get(2).getDefenderAbility()+clubTwoPlayerList.get(3).getDefenderAbility()+clubTwoPlayerList.get(4).getDefenderAbility();
 
@@ -63,30 +80,31 @@ public class Game {
 
         clubOneGoal=0;
         clubTwoGoal=0;
-        getClubOneGoal(clubOnePlayerList.get(0),clubTwoDefender,clubTwoKeeper);
-        getClubOneGoal(clubOnePlayerList.get(1),clubTwoDefender,clubTwoKeeper);
-        getClubOneGoal(clubOnePlayerList.get(2),clubTwoDefender,clubTwoKeeper);
+        getClubOneGoal(0,clubTwoDefender,clubTwoKeeper);
 
-        System.out.println("******************************************************************************");
+        getClubTwoGoal(0,clubOneDefender,clubOneKeeper);
 
-        getClubTwoGoal(clubTwoPlayerList.get(0),clubOneDefender,clubOneKeeper);
-        getClubTwoGoal(clubTwoPlayerList.get(1),clubOneDefender,clubOneKeeper);
-        getClubTwoGoal(clubTwoPlayerList.get(2),clubOneDefender,clubOneKeeper);
+        getClubOneGoal(1,clubTwoDefender,clubTwoKeeper);
 
+        getClubTwoGoal(1,clubOneDefender,clubOneKeeper);
 
+        getClubOneGoal(2,clubTwoDefender,clubTwoKeeper);
 
+        getClubTwoGoal(2,clubOneDefender,clubOneKeeper);
 
         if(clubOneGoal==clubTwoGoal&&penalty){
-            System.out.println("******************************************************************************");
+            gameResult.addProcess("******************************************************************************");
             penalty(clubOneKeeper,clubTwoKeeper);
         }else{
-            System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
+            gameResult.addProcess(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
         }
-        System.out.println(gameType.toString()+"——"+gameName+"全场比赛结束");
+        gameResult.addProcess(gameType.toString()+"——"+gameName+"全场比赛结束");
 
+        return this.gameResult;
         }
 
-    void getClubOneGoal(Player player,double defender, double keeper){
+    void getClubOneGoal(int playNum,double defender, double keeper){
+        Player player =clubOnePlayerList.get(playNum);
         String name=player.getName();
         int goalNumber=0;
 
@@ -110,14 +128,29 @@ public class Game {
                 if(go>=2){
                     clubOneGoal++;
                     goalNumber++;
-                    System.out.println(player.getName()+"打进个人第"+goalNumber+"球");
+                    gameResult.addProcess(club1.getName()+"的"+player.getName()+"打进个人第"+goalNumber+"球");
+                    gameResult.goal(1,playNum);
                     if(go==3){
-                        System.out.println(player.getName()+"凭借自己高超的技巧获得了新的机会");
+                        gameResult.addProcess(club1.getName()+"的"+player.getName()+"凭借自己高超的技巧获得了新的机会");
                     }
                 } else if(go==0){
-                    System.out.println(player.getName()+"被"+club2.getPlayerList().get(3).getName()+"和"+club2.getPlayerList().get(4).getName()+"夹击断下球权");
+                    Random random =new Random();
+
+                    double possibility=random.nextDouble()*defender;
+
+                    if(possibility<club2.getPlayerList().get(3).getDefenderAbility()){
+                        gameResult.defend(2,0);
+                        gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(2).getName()+"断下球权");
+                    }else if((possibility<club2.getPlayerList().get(2).getDefenderAbility()+club2.getPlayerList().get(2).getDefenderAbility())) {
+                        gameResult.defend(2, 1);
+                        gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(3).getName()+"断下球权");
+                    }else{
+                        gameResult.defend(2,2);
+                        gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(4).getName()+"断下球权");
+                    }
                 }else {
-                    System.out.println(player.getName()+"的射门被"+club2.getPlayerList().get(5).getName()+"奋力扑出");
+                    gameResult.save(2);
+                    gameResult.addProcess(club1.getName()+"的"+player.getName()+"的射门被"+club2.getName()+"的"+club2.getPlayerList().get(5).getName()+"奋力扑出");
                 }
             }
         }
@@ -125,7 +158,8 @@ public class Game {
     }
 
 
-    void getClubTwoGoal(Player player,double defender, double keeper){
+    void getClubTwoGoal(int playNum,double defender, double keeper){
+        Player player =clubTwoPlayerList.get(playNum);
         String name=player.getName();
         int goalNumber=0;
 
@@ -144,14 +178,29 @@ public class Game {
                 if(go>=2){
                     clubTwoGoal++;
                     goalNumber++;
-                    System.out.println(player.getName()+"打进个人第"+goalNumber+"球");
+                    gameResult.addProcess(club2.getName()+"的"+player.getName()+"打进个人第"+goalNumber+"球");
+                    gameResult.goal(2,playNum);
                     if(go==3){
-                        System.out.println(player.getName()+"凭借自己高超的技巧获得了新的机会");
+                        gameResult.addProcess(club2.getName()+"的"+player.getName()+"凭借自己高超的技巧获得了新的机会");
                     }
                 } else if(go==0){
-                    System.out.println(player.getName()+"被"+club1.getPlayerList().get(3).getName()+"和"+club1.getPlayerList().get(4).getName()+"夹击断下球权");
+                    Random random =new Random();
+
+                    double possibility=random.nextDouble()*defender;
+
+                    if(possibility<club1.getPlayerList().get(3).getDefenderAbility()){
+                        gameResult.defend(1,0);
+                        gameResult.addProcess(club2.getName()+"的"+player.getName()+"被"+club1.getName()+"的"+club1.getPlayerList().get(2).getName()+"断下球权");
+                    }else if((possibility<club1.getPlayerList().get(2).getDefenderAbility()+club1.getPlayerList().get(2).getDefenderAbility())) {
+                        gameResult.defend(1, 1);
+                        gameResult.addProcess(club2.getName()+"的"+player.getName()+"被"+club1.getName()+"的"+club1.getPlayerList().get(3).getName()+"断下球权");
+                    }else{
+                        gameResult.defend(1,2);
+                        gameResult.addProcess(club2.getName()+"的"+player.getName()+"被"+club1.getName()+"的"+club1.getPlayerList().get(4).getName()+"断下球权");
+                    }
                 }else {
-                    System.out.println(player.getName()+"的射门被"+club1.getPlayerList().get(5).getName()+"奋力扑出");
+                    gameResult.save(1);
+                    gameResult.addProcess(club2.getName()+"的"+player.getName()+"的射门被"+club1.getName()+"的"+club1.getPlayerList().get(5).getName()+"奋力扑出");
                 }
             }
         }
