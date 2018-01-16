@@ -1,4 +1,4 @@
-package PO;
+package PO.Games;
 
 public enum GameType {
 

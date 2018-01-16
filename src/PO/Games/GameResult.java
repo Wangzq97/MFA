@@ -1,4 +1,6 @@
-package PO;
+package PO.Games;
+
+import PO.Club;
 
 public class GameResult {
 
@@ -23,6 +25,10 @@ public class GameResult {
     private int clubOneGoal;
 
     private int clubTwoGoal;
+
+    private int clubOnePenalty;
+
+    private int clubTwoPenalty;
 
     private int[] clubOneGoalsList={0,0,0};             //  俱乐部1各个前锋的进球数据
 
@@ -51,6 +57,8 @@ public class GameResult {
         this.penalty=penalty;
         clubOneGoal=0;
         clubTwoGoal=0;
+        clubOnePenalty=0;
+        clubTwoPenalty=0;
     }
 
     public void goal(int clubNum, int playNum){
@@ -79,8 +87,20 @@ public class GameResult {
         }
     }
 
+    public void penalty(int clubNum){
+        if(clubNum==1){
+            clubOnePenalty++;
+            clubOneGoal++;
+            //clubOneGoalsList[playNum]++;
+        }else{
+            clubTwoPenalty++;
+            clubTwoGoal++;
+            //clubTwoGoalsList[playNum]++;
+        }
+    }
+
     public void addProcess(String newLine){
-        this.gameProcess+=newLine;
+        this.gameProcess+="\n"+newLine;
     }
 
     public int getClubOneGoal(){

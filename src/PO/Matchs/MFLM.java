@@ -1,4 +1,10 @@
-package PO;
+package PO.Matchs;
+
+import PO.Club;
+import PO.Games.Game;
+import PO.Games.GameResult;
+import PO.Games.GameType;
+import PO.LeagueTableCell;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,7 +23,7 @@ public class MFLM extends Match {
 
 
     public MFLM(int season, int time, ArrayList<Club> clubList ){
-        gameType=GameType.MFLM;
+        gameType= GameType.MFLM;
         this.season=season;
         this.time=time;
         this.clubList=clubList;
@@ -69,13 +75,15 @@ public class MFLM extends Match {
         addTurn();
 
         nextCPT();      //排下一轮对阵情况
-
+        leagueTable.sort();
         printLeagueTable();
     }
 
     protected void processGameResult(int clubOneIndex, int clubTwoIndex, GameResult gameResult) {
         leagueTable.change(clubOneIndex,gameResult.getClubOneGoal(),gameResult.getClubTwoGoal());
         leagueTable.change(clubTwoIndex,gameResult.getClubTwoGoal(),gameResult.getClubOneGoal());
+        System.out.println(gameResult.getGameProcess());
+
     }
 
     private void nextCPT(){
@@ -93,8 +101,9 @@ public class MFLM extends Match {
 
     private void printLeagueTable(){
         System.out.println("第"+turn+"轮");
+        ArrayList<LeagueTableCell> printList=leagueTable.getPrintList();
         for(int i=0;i<clubNumber;i++){
-            LeagueTableCell cell=leagueTable.cellList.get(i);
+            LeagueTableCell cell=printList.get(i);
             System.out.println(cell.getClubName()+" "+cell.getHasPlayed()+" "+cell.getWins()+" "+cell.getDraws()+" "+cell.getLoses()+" "+cell.getGoals()+" "+cell.getLosts()+" "+cell.getScore());
         }
         System.out.println("**************************************************");

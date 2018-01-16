@@ -1,4 +1,6 @@
-package PO;
+package PO.Games;
+
+import PO.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -117,7 +119,7 @@ public class Game {
 
         int chances=2;
 
-        if(player.getLocation()==Location.midfield){chances=1;}
+        if(player.getLocation()== Location.midfield){chances=1;}
 
         int go=3;
 
@@ -138,10 +140,10 @@ public class Game {
 
                     double possibility=random.nextDouble()*defender;
 
-                    if(possibility<club2.getPlayerList().get(3).getDefenderAbility()){
+                    if(possibility<club2.getPlayerList().get(2).getDefenderAbility()){
                         gameResult.defend(2,0);
                         gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(2).getName()+"断下球权");
-                    }else if((possibility<club2.getPlayerList().get(2).getDefenderAbility()+club2.getPlayerList().get(2).getDefenderAbility())) {
+                    }else if((possibility<club2.getPlayerList().get(2).getDefenderAbility()+club2.getPlayerList().get(3).getDefenderAbility())) {
                         gameResult.defend(2, 1);
                         gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(3).getName()+"断下球权");
                     }else{
@@ -242,44 +244,44 @@ public class Game {
         //最先的5次
         for(int i=0;i<5;i++) {
             if (getPenalty(club1.getPlayerList().get(i % 3).getAttackAbility(), keeper2/2)) {
-                penalty1++;
-                System.out.println(club1.getPlayerList().get(i % 3).getName() + "稳稳将球罚进");
+                gameResult.penalty(1);
+                gameResult.addProcess(club1.getPlayerList().get(i % 3).getName() + "稳稳将球罚进");
             } else {
-                System.out.println(club1.getPlayerList().get(i % 3).getName() + "竟然把球罚丢了");
+                gameResult.addProcess(club1.getPlayerList().get(i % 3).getName() + "竟然把球罚丢了");
             }
 
             if ((penalty1 - penalty2) > (5 - i) || (penalty2 - penalty1) > (4 - i)) {
-                System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
-                System.out.println("（点球） " + club1.getName() + " " + penalty1 + " ： " + penalty2 + " " + club2.getName() + " （点球）");
+                gameResult.addProcess(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
+                gameResult.addProcess("（点球） " + club1.getName() + " " + penalty1 + " ： " + penalty2 + " " + club2.getName() + " （点球）");
                 return;
             }
 
             if (getPenalty(club2.getPlayerList().get(i % 3).getAttackAbility(), keeper1/2)) {
-                penalty2++;
-                System.out.println(club2.getPlayerList().get(i % 3).getName() + "稳稳将球罚进");
+                gameResult.penalty(2);
+                gameResult.addProcess(club2.getPlayerList().get(i % 3).getName() + "稳稳将球罚进");
             } else {
-                System.out.println(club2.getPlayerList().get(i % 3).getName() + "竟然把球罚丢了");
+                gameResult.addProcess(club2.getPlayerList().get(i % 3).getName() + "竟然把球罚丢了");
             }
 
             if ((penalty1 - penalty2) > (4 - i) || (penalty2 - penalty1) > (4 - i)) {
-                System.out.println(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
-                System.out.println("（点球） " + club1.getName() + " " + penalty1 + " ： " + penalty2 + " " + club2.getName() + " （点球）");
+                gameResult.addProcess(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
+                gameResult.addProcess("（点球） " + club1.getName() + " " + penalty1 + " ： " + penalty2 + " " + club2.getName() + " （点球）");
                 return;
             }
         }
 
             while(penalty1==penalty2){
                 if(getPenalty(club1.getPlayerList().get(index).getAttackAbility(),keeper2/2)){
-                    penalty1++;
-                    System.out.println(club1.getPlayerList().get(index).getName()+"稳稳将球罚进");
+                    gameResult.penalty(1);
+                    gameResult.addProcess(club1.getPlayerList().get(index).getName()+"稳稳将球罚进");
                 }else{
-                    System.out.println(club1.getPlayerList().get(index).getName()+"竟然把球罚丢了");
+                    gameResult.addProcess(club1.getPlayerList().get(index).getName()+"竟然把球罚丢了");
                 }
                 if(getPenalty(club2.getPlayerList().get(index).getAttackAbility(),keeper1/2)){
-                    penalty2++;
-                    System.out.println(club2.getPlayerList().get(index).getName()+"稳稳将球罚进");
+                    gameResult.penalty(2);
+                    gameResult.addProcess(club2.getPlayerList().get(index).getName()+"稳稳将球罚进");
                 }else{
-                    System.out.println(club1.getPlayerList().get(index).getName()+"竟然把球罚丢了");
+                    gameResult.addProcess(club1.getPlayerList().get(index).getName()+"竟然把球罚丢了");
                 }
 
                 index=(index+1)%3;

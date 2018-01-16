@@ -1,4 +1,6 @@
-package PO;
+package PO.Matchs;
+
+import PO.Games.GameType;
 
 abstract class Match {
 
