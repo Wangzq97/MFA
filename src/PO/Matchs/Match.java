@@ -2,7 +2,9 @@ package PO.Matchs;
 
 import PO.Games.GameType;
 
-abstract class Match {
+import java.io.Serializable;
+
+abstract class Match implements Serializable {
 
     protected GameType gameType;  //比赛类型
 

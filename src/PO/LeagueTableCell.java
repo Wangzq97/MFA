@@ -1,6 +1,8 @@
 package PO;
 
-public class LeagueTableCell {
+import java.io.Serializable;
+
+public class LeagueTableCell implements Serializable {
 
     public LeagueTableCell(String clubName){
         this.clubName=clubName;

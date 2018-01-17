@@ -1,8 +1,9 @@
 package PO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Club implements Cloneable{
+public class Club implements Serializable {
 
     private String name;
 
@@ -22,17 +23,6 @@ public class Club implements Cloneable{
 
     public ArrayList<Player> getPlayerList(){
         return players;
-    }
-
-    @Override
-    public Object clone() {
-        Club club = null;
-        try{
-            club = (Club)super.clone();
-        }catch(CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return club;
     }
 
 }

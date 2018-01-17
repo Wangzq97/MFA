@@ -6,11 +6,10 @@ import PO.Games.GameResult;
 import PO.Games.GameType;
 import PO.Games.Penalty;
 import PO.Pair;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MC extends Match {
+public class MC extends Match{
     final int clubNumber=8;             //注意无论怎么样，该值必须为2的x（x>=1)次方，否则……
 
     private int leftNumber;             //剩余队伍数（可能有用，先写着）
@@ -30,10 +29,14 @@ public class MC extends Match {
         isEnd=false;
     }
 
-    public void run(){
-        while(!isEnd){
+    public boolean run() throws NoMoreGameException {
+        if(!isEnd){
             runThisGame();
+            if(!isEnd) return true;
+        }else{
+            throw new NoMoreGameException();
         }
+        return false;
     }
 
 

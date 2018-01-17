@@ -1,8 +1,9 @@
 package PO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class LeagueTable {
+public abstract class LeagueTable implements Serializable {
 
     protected int numbers;              //一共几只队伍
 

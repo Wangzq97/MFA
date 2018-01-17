@@ -1,8 +1,17 @@
 import PO.*;
 import PO.Matchs.MC;
 import PO.Matchs.MFLM;
+import PO.Matchs.NoMoreGameException;
+import UI.ui;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static com.oracle.jrockit.jfr.ContentType.Bytes;
 
 public class start {
 
@@ -185,14 +194,79 @@ public class start {
 
         club8.setPlayers(clubEightPlayerList);
         clubList.add(club8);
+        new ui(clubList);
 
-        MFLM mflm=new MFLM(1,1,clubList);
-        for(int i=0;i<14;i++) {
+        /*MFLM mflm=new MFLM(1,1,clubList);
+        for(int i=0;i<7;i++) {
             mflm.runThisGame();
         }
 
-        //MC mc=new MC(1,1,clubList);
-        //mc.run();
+        ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+        ObjectOutputStream oos2 = null;
+        try {
+            oos2 = new ObjectOutputStream(byteOutStream);
+            oos2.writeObject(mflm);
+            oos2.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            ObjectOutputStream oos1 = new ObjectOutputStream(new FileOutputStream("worm.out"));
+            oos1.writeObject(byteOutStream.toByteArray());//必须所有引用的对象都实现序列化，否则抛出有java.io.NotSerializableException:这个异常
+            oos1.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(byteOutStream.toByteArray());*/
+        /*byte[] bytes=null;
+        MFLM smflm=null;
+        File f = new File("C:\\Users\\wangz\\Documents\\MFA\\src\\saves\\saves.out");
+
+        ObjectInputStream ois2 = null;
+        try {
+            ois2 = new ObjectInputStream(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            bytes = (byte[])ois2.readObject();
+            ois2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayInputStream byteInStream = new ByteArrayInputStream(bytes);
+        try {
+            ObjectInputStream ois3 = new ObjectInputStream(byteInStream);
+            smflm= (MFLM)ois3.readObject();
+            ois2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        for(int i=0;i<7;i++) {
+            smflm.runThisGame();
+        }*/
+
+
+
+        /*MC mc=new MC(1,1,clubList);
+        try {
+            while(mc.run());
+            mc.run();
+        } catch (NoMoreGameException e) {
+            e.printStackTrace();
+        }*/
 
         /*Club club2=new Club();
 

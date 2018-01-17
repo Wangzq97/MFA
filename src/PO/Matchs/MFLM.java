@@ -6,10 +6,11 @@ import PO.Games.GameResult;
 import PO.Games.GameType;
 import PO.LeagueTableCell;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MFLM extends Match {
+public class MFLM extends Match{
 
     final int clubNumber=8;             //注意无论怎么样，该值必须为正偶数，如果是奇数，请务必自己重写交换主客场位置的那一部分
 
@@ -19,7 +20,13 @@ public class MFLM extends Match {
 
     private MFLMLeagueTable leagueTable;
 
+    private boolean isEnd;
 
+    private String message="";
+
+    public MFLMLeagueTable getLeagueTable(){
+        return leagueTable;
+    }
 
 
     public MFLM(int season, int time, ArrayList<Club> clubList ){
@@ -28,6 +35,7 @@ public class MFLM extends Match {
         this.time=time;
         this.clubList=clubList;
         this.turn=0;
+        this.isEnd=false;
 
         counterpartTable=new int[clubNumber+1];
 
@@ -49,6 +57,21 @@ public class MFLM extends Match {
             nextCPT();
         }
 
+    }
+
+    public boolean isEnd(){
+        return isEnd;
+    }
+
+
+    public String run() throws NoMoreGameException {
+        message="";
+        if(!isEnd){
+            runThisGame();
+        }else{
+            throw new NoMoreGameException();
+        }
+        return message;
     }
 
 
@@ -74,7 +97,11 @@ public class MFLM extends Match {
         //本轮全部结束
         addTurn();
 
-        nextCPT();      //排下一轮对阵情况
+        if(turn>=(clubNumber-1)*2){
+            isEnd=true;
+        }else{
+            nextCPT();      //排下一轮对阵情况
+        }
         leagueTable.sort();
         printLeagueTable();
     }
@@ -83,6 +110,7 @@ public class MFLM extends Match {
         leagueTable.change(clubOneIndex,gameResult.getClubOneGoal(),gameResult.getClubTwoGoal());
         leagueTable.change(clubTwoIndex,gameResult.getClubTwoGoal(),gameResult.getClubOneGoal());
         System.out.println(gameResult.getGameProcess());
+        message=message+gameResult.getGameProcess();
 
     }
 
