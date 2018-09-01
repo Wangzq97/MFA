@@ -17,7 +17,9 @@ public class MC extends Match{
     private boolean isEnd;
 
     private ArrayList<Club> clubList;
-    ArrayList<Pair> pairList;
+    private ArrayList<Pair> pairList;
+
+    private String message="";
 
     public MC(int season, int time, ArrayList<Club> clubList){
         gameType= GameType.MC;
@@ -69,13 +71,19 @@ public class MC extends Match{
 
             if(pairList.size()>1) {
                 for(int i=0;i<pairList.size();i++){
-                    Game game=new Game("",gameType,season,time,turn,pairList.get(i).getClub(1),pairList.get(i).getClub(2),true,false);
+                    Club club1=pairList.get(i).getClub(1);
+                    Club club2=pairList.get(i).getClub(2);
+                    String gameName="明月杯第"+(turn+1)+"比赛日1/"+leftNumber/2+"决赛第一回合第"+(i+1)+"场——"+club1.getName()+"对阵"+club2.getName();
+                    Game game=new Game(gameName,gameType,season,time,turn,club1,club2,true,false);
                     processGameResult(pairList.get(i),1,game.startGame(),false);
                 }
             }else{
                 //pair只有一个了，说明这场是决赛了
                 System.out.println("FINAL");
-                Game game=new Game("",gameType,season,time,turn,pairList.get(0).getClub(1),pairList.get(0).getClub(2),false,true);
+                Club club1=pairList.get(0).getClub(1);
+                Club club2=pairList.get(0).getClub(2);
+                String gameName="明月杯第"+(turn+1)+"比赛日"+"决赛"+"——"+club1.getName()+"对阵"+club2.getName();
+                Game game=new Game(gameName,gameType,season,time,turn,club1,club2,false,true);
                 processGameResult(pairList.get(0),0,game.startGame(),false);
                 Club winner = pairList.get(0).getWinner();
                 if (winner == null) {
@@ -84,6 +92,7 @@ public class MC extends Match{
                     Penalty penalty = new Penalty(pairList.get(0).getClub(1), pairList.get(0).getClub(2), gameType, season, time, turn);
                     winner = penalty.getWinner();
                     System.out.println(penalty.getGameResultProgress());
+                    message+=penalty.getGameResultProgress();
                 }
                 isEnd=true;
             }
@@ -92,7 +101,10 @@ public class MC extends Match{
 
         }else{
                 for (int i = 0; i < pairList.size(); i++) {
-                    Game game = new Game("", gameType, season, time, turn, pairList.get(i).getClub(2), pairList.get(i).getClub(1), true, false);
+                    Club club1=pairList.get(i).getClub(1);
+                    Club club2=pairList.get(i).getClub(2);
+                    String gameName="明月杯第"+(turn+1)+"比赛日1/"+leftNumber/2+"决赛第二回合第"+(i+1)+"场——"+club2.getName()+"对阵"+club1.getName();
+                    Game game = new Game(gameName, gameType, season, time, turn, club2, club1, true, false);
                     processGameResult(pairList.get(i), 2, game.startGame(),true);
                     Club winner = pairList.get(i).getWinner();
                     if (winner == null) {
@@ -101,6 +113,7 @@ public class MC extends Match{
                         Penalty penalty = new Penalty(pairList.get(i).getClub(1), pairList.get(i).getClub(2), gameType, season, time, turn);
                         winner = penalty.getWinner();
                         System.out.println(penalty.getGameResultProgress());
+                        message+=penalty.getGameResultProgress();
                     }
 
                     clubList.add(winner);
@@ -108,7 +121,7 @@ public class MC extends Match{
                 }
 
         }
-        turn++;
+        addTurn();
     }
 
     private void processGameResult(Pair pair,int home,GameResult gameResult,boolean needExchange){
@@ -118,5 +131,6 @@ public class MC extends Match{
             pair.change(home, gameResult.getClubOneGoal(), gameResult.getClubTwoGoal());
         }
         System.out.println(gameResult.getGameProcess());
+        message+=gameResult.getGameProcess();
     }
 }

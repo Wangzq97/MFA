@@ -5,9 +5,11 @@ import PO.Games.Game;
 import PO.Games.GameResult;
 import PO.Games.GameType;
 import PO.LeagueTableCell;
+import PO.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class MFLM extends Match{
@@ -65,7 +67,6 @@ public class MFLM extends Match{
 
 
     public String run() throws NoMoreGameException {
-        message="";
         if(!isEnd){
             runThisGame();
         }else{
@@ -83,13 +84,19 @@ public class MFLM extends Match{
         if(turn%2==0){
             //偶数回合为了避免一直主场或一直客场，交换主客场位置
             for(int i=0;i<clubNumber/2;i++){
-                Game game=new Game("",gameType,season,time,turn,clubList.get(counterpartTable[clubNumber-i-1]),clubList.get(counterpartTable[i]),true,false);
+                Club club1=clubList.get(counterpartTable[clubNumber-i-1]);
+                Club club2=clubList.get(counterpartTable[i]);
+                String gameName="明月足球甲级联赛第"+(turn+1)+"轮第"+(i+1)+"场——"+club1.getName()+"对阵"+club2.getName();
+                Game game=new Game(gameName,gameType,season,time,turn,club1,club2,true,false);
                 processGameResult(counterpartTable[clubNumber-i-1],counterpartTable[i],game.startGame());
             }
         }else{
             //奇数回合正常
             for(int i=0;i<clubNumber/2;i++){
-                Game game=new Game("",gameType,season,time,turn,clubList.get(counterpartTable[i]),clubList.get(counterpartTable[clubNumber-i-1]),true,false);
+                Club club1=clubList.get(counterpartTable[i]);
+                Club club2=clubList.get(counterpartTable[clubNumber-i-1]);
+                String gameName="明月足球甲级联赛第"+(turn+1)+"轮第"+(i+1)+"场——"+club1.getName()+"对阵"+club2.getName();
+                Game game=new Game(gameName,gameType,season,time,turn,club1,club2,true,false);
                 processGameResult(counterpartTable[i],counterpartTable[clubNumber-i-1],game.startGame());
             }
         }
@@ -103,6 +110,8 @@ public class MFLM extends Match{
             nextCPT();      //排下一轮对阵情况
         }
         leagueTable.sort();
+        System.out.println();
+        System.out.println("**************************************************");
         printLeagueTable();
     }
 
@@ -128,6 +137,7 @@ public class MFLM extends Match{
     }
 
     private void printLeagueTable(){
+        System.out.println("MFLM第"+season+"赛季积分榜");
         System.out.println("第"+turn+"轮");
         ArrayList<LeagueTableCell> printList=leagueTable.getPrintList();
         for(int i=0;i<clubNumber;i++){
@@ -137,6 +147,32 @@ public class MFLM extends Match{
         System.out.println("**************************************************");
         System.out.println();
     }
+
+    public void printGoldenGoal(){
+        ArrayList<Player> goalList=new ArrayList<Player>();
+        for(int i=0;i<clubList.size();i++){
+            for(int j=0;j<clubList.get(i).getPlayerList().size();j++){
+                goalList.add(clubList.get(i).getPlayerList().get(j));
+            }
+            goalList.sort(new SortByGoal());
+        }
+        for(int i=0;i<goalList.size()&&goalList.get(i).getGoal()>0;i++){
+            System.out.println("第"+(i+1)+"名："+goalList.get(i).getClub()+"的"+goalList.get(i).getName()+"打进了"+goalList.get(i).getGoal()+"球");
+        }
+
+
+    }
+
+    class SortByGoal implements Comparator {
+        public int compare(Object o1, Object o2) {
+            Player p1 = (Player) o1;
+            Player p2 = (Player) o2;
+            if (p1.getGoal() < p2.getGoal()) return 1;
+            if (p1.getGoal() == p2.getGoal()) return 0;
+            return -1;
+        }
+    }
+
 
 
 }

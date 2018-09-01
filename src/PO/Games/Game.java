@@ -100,7 +100,7 @@ public class Game {
         }else{
             gameResult.addProcess(club1.getName()+" "+clubOneGoal+" ： "+clubTwoGoal+" "+club2.getName());
         }
-        gameResult.addProcess(gameType.toString()+"——"+gameName+"全场比赛结束");
+        gameResult.addProcess(gameType.toString()+"——"+gameName+"    全场比赛结束");
 
         return this.gameResult;
         }
@@ -129,6 +129,7 @@ public class Game {
                 go=getGoal(attack,defender,keeper);
                 if(go>=2){
                     clubOneGoal++;
+                    clubOnePlayerList.get(playNum).addGoal();
                     goalNumber++;
                     gameResult.addProcess(club1.getName()+"的"+player.getName()+"打进个人第"+goalNumber+"球");
                     gameResult.goal(1,playNum);
@@ -143,16 +144,20 @@ public class Game {
                     if(possibility<club2.getPlayerList().get(2).getDefenderAbility()){
                         gameResult.defend(2,0);
                         gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(2).getName()+"断下球权");
+                        clubTwoPlayerList.get(2).addDefend();
                     }else if((possibility<club2.getPlayerList().get(2).getDefenderAbility()+club2.getPlayerList().get(3).getDefenderAbility())) {
                         gameResult.defend(2, 1);
                         gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(3).getName()+"断下球权");
+                        clubTwoPlayerList.get(3).addDefend();
                     }else{
                         gameResult.defend(2,2);
                         gameResult.addProcess(club1.getName()+"的"+player.getName()+"被"+club2.getName()+"的"+club2.getPlayerList().get(4).getName()+"断下球权");
+                        clubTwoPlayerList.get(4).addDefend();
                     }
                 }else {
                     gameResult.save(2);
                     gameResult.addProcess(club1.getName()+"的"+player.getName()+"的射门被"+club2.getName()+"的"+club2.getPlayerList().get(5).getName()+"奋力扑出");
+                    clubTwoPlayerList.get(5).addDefend();
                 }
             }
         }
@@ -179,6 +184,7 @@ public class Game {
                 go=getGoal(attack,defender,keeper);
                 if(go>=2){
                     clubTwoGoal++;
+                    clubTwoPlayerList.get(playNum).addGoal();
                     goalNumber++;
                     gameResult.addProcess(club2.getName()+"的"+player.getName()+"打进个人第"+goalNumber+"球");
                     gameResult.goal(2,playNum);
@@ -193,16 +199,20 @@ public class Game {
                     if(possibility<club1.getPlayerList().get(3).getDefenderAbility()){
                         gameResult.defend(1,0);
                         gameResult.addProcess(club2.getName()+"的"+player.getName()+"被"+club1.getName()+"的"+club1.getPlayerList().get(2).getName()+"断下球权");
+                        clubOnePlayerList.get(2).addDefend();
                     }else if((possibility<club1.getPlayerList().get(2).getDefenderAbility()+club1.getPlayerList().get(2).getDefenderAbility())) {
                         gameResult.defend(1, 1);
                         gameResult.addProcess(club2.getName()+"的"+player.getName()+"被"+club1.getName()+"的"+club1.getPlayerList().get(3).getName()+"断下球权");
+                        clubOnePlayerList.get(3).addDefend();
                     }else{
                         gameResult.defend(1,2);
                         gameResult.addProcess(club2.getName()+"的"+player.getName()+"被"+club1.getName()+"的"+club1.getPlayerList().get(4).getName()+"断下球权");
+                        clubOnePlayerList.get(4).addDefend();
                     }
                 }else {
                     gameResult.save(1);
                     gameResult.addProcess(club2.getName()+"的"+player.getName()+"的射门被"+club1.getName()+"的"+club1.getPlayerList().get(5).getName()+"奋力扑出");
+                    clubOnePlayerList.get(5).addDefend();
                 }
             }
         }

@@ -15,6 +15,10 @@ public class Player implements Serializable {
 
     private double defenderAbility;
 
+    private int goal;
+
+    private int defend;
+
     private double score;
 
     public Player(String club, String id, String name, Location location, double attackAbility,double defenderAbility, double score){
@@ -25,6 +29,8 @@ public class Player implements Serializable {
         this.attackAbility=attackAbility;
         this.defenderAbility=defenderAbility;
         this.score=score;
+        this.goal=0;
+        this.defend=0;
 
     }
 
@@ -47,6 +53,15 @@ public class Player implements Serializable {
     public double getDefenderAbility(){
         return defenderAbility;
     }
+
+    public void addGoal(){goal++;}
+
+    public void addDefend(){defend++;}
+
+    public int getGoal(){return goal;}
+
+    public int getDefend(){return defend;}
+
 
 
 }
